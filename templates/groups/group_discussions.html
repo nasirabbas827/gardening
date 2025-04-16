@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Group Discussions{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Discussions in Group: {{ group.name }}</h2>
+    
+    <!-- Display discussions -->
+    <div class="mb-4">
+        {% for discussion in discussions %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ discussion.user.username }} <small class="text-muted">({{ discussion.created_at|date:"F j, Y, g:i a" }})</small></h5>
+                    <p class="card-text">{{ discussion.content }}</p>
+                </div>
+            </div>
+        {% empty %}
+            <p>No discussions yet. Be the first to start one!</p>
+        {% endfor %}
+    </div>
+    
+    <!-- Start a new discussion form -->
+    
+    <h3>Start a New Discussion</h3>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="content">Your message:</label>
+            <textarea id="content" name="content" class="form-control" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Post</button>
+        <a href="{% url 'group_list' %}" class="btn btn-secondary mt-3">Back to Groups</a>
+    </form>
+</div>
+{% endblock %}

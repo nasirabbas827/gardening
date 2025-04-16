@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}{{ resource.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <h2 class="card-title text-primary">{{ resource.title }}</h2>
+            <p class="badge bg-info text-dark mb-3">{{ resource.get_category_display }}</p>
+
+            <h5 class="text-muted">Description</h5>
+            <p>{{ resource.description }}</p>
+
+            <h5 class="text-muted">Content</h5>
+            <div class="border rounded p-3 mb-4 bg-light">
+                {{ resource.content }}
+            </div>
+
+            {% if resource.video_link %}
+                <a href="{{ resource.video_link }}" class="btn btn-outline-success" target="_blank">
+                    <i class="bi bi-play-circle-fill"></i> Watch Related Video
+                </a>
+            {% endif %}
+
+            <a href="{% url 'resource_list' %}" class="btn btn-outline-secondary ms-2">Back to Resources</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

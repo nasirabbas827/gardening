@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="container">
+    <h2>Supervisor Dashboard</h2>
+
+    <!-- User Plants Table -->
+    <h3>All User Plants</h3>
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Plant Name</th>
+                <th>Category</th>
+                <th>Growth Stage</th>
+                <th>Health Status</th>
+                <th>Added On</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for plant in user_plants %}
+            <tr>
+                <td>{{ plant.user.username }}</td>
+                <td>{{ plant.plant.name }}</td>
+                <td>{{ plant.plant.category }}</td>
+                <td>{{ plant.current_growth_stage }}</td>
+                <td>{{ plant.health_status }}</td>
+                <td>{{ plant.date_added }}</td>
+                <td class="text-center">
+                    <a href="{% url 'manage_recommendations' plant.user_plant_id %}">
+                        <button class="btn-primary">Add/View Recommendations</button>
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">No user plants found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Observations Table -->
+    <h3>All Plant Observations</h3>
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Plant Name</th>
+                <th>Observation Date</th>
+                <th>Growth Stage</th>
+                <th>Health Indicator</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for observation in observations %}
+            <tr>
+                <td>{{ observation.user_plant.user.username }}</td>
+                <td>{{ observation.user_plant.plant.name }}</td>
+                <td>{{ observation.observation_date }}</td>
+                <td>{{ observation.growth_stage }}</td>
+                <td>{{ observation.health_indicator }}</td>
+                <td>{{ observation.notes }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No observations found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

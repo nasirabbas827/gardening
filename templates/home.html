@@ -1,0 +1,607 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Gardening Care{% endblock %}
+
+{% block css %}
+{{ block.super }}
+<style>
+    /* Enhanced Dashboard Styles */
+    .dashboard-container {
+        padding: 2rem 0;
+    }
+    
+    .section-title {
+        font-family: 'Georgia', serif;
+        color: #004d4d;
+        margin-bottom: 1.5rem;
+        position: relative;
+        padding-bottom: 0.5rem;
+    }
+    
+    .section-title:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background-color: #006666;
+    }
+    
+    .dashboard-card {
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 2rem;
+        border: none;
+    }
+    
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-header-custom {
+        padding: 1rem 1.5rem;
+        font-weight: bold;
+        border-bottom: none;
+    }
+    
+    .card-body-custom {
+        padding: 1.5rem;
+    }
+    
+    .plant-card {
+        transition: transform 0.3s ease;
+        height: 100%;
+        border-radius: 8px;
+        border: 1px solid rgba(0, 77, 77, 0.2);
+    }
+    
+    .plant-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .weather-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .tip-container {
+        background-color: rgba(40, 167, 69, 0.1);
+        border-left: 4px solid #28a745;
+        padding: 1rem;
+        border-radius: 0 8px 8px 0;
+        margin-bottom: 2rem;
+    }
+    
+    .welcome-section {
+        background: linear-gradient(135deg, rgba(0, 77, 77, 0.8), rgba(0, 102, 102, 0.7));
+        color: white;
+        padding: 3rem 1rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .welcome-section:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('/placeholder.svg?height=400&width=1200') center/cover no-repeat;
+        opacity: 0.1;
+        z-index: 0;
+    }
+    
+    .welcome-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .reminder-item {
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        padding: 1rem;
+    }
+    
+    .reminder-completed {
+        background-color: rgba(40, 167, 69, 0.2);
+        border-left: 4px solid #28a745;
+    }
+    
+    .reminder-pending {
+        background-color: rgba(255, 193, 7, 0.2);
+        border-left: 4px solid #ffc107;
+    }
+    
+    .search-container {
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .notification-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background-color: #dc3545;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+    }
+    
+    .group-card {
+        border-left: 4px solid #28a745;
+        transition: transform 0.3s ease;
+    }
+    
+    .group-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .recommendation-item {
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        background-color: rgba(0, 123, 255, 0.1);
+        border-left: 4px solid #007bff;
+    }
+    
+    /* Custom scrollbar for lists */
+    .scrollable-list {
+        max-height: 300px;
+        overflow-y: auto;
+        padding-right: 5px;
+    }
+    
+    .scrollable-list::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .scrollable-list::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    
+    .scrollable-list::-webkit-scrollbar-thumb {
+        background: #006666;
+        border-radius: 10px;
+    }
+    
+    .scrollable-list::-webkit-scrollbar-thumb:hover {
+        background: #004d4d;
+    }
+    
+    /* Weather card styling */
+    .weather-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border: none;
+        border-radius: 10px;
+        height: 100%;
+    }
+    
+    .weather-date {
+        font-weight: bold;
+        color: #004d4d;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid rgba(0, 77, 77, 0.2);
+        padding-bottom: 0.5rem;
+    }
+    
+    .weather-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .weather-info-item {
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .add-plant-btn {
+        background-color: #006666;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+    
+    .add-plant-btn:hover {
+        background-color: #004d4d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Notifications -->
+{% for note in notifications %}
+<div class="alert alert-info alert-dismissible fade show" role="alert" id="notification-{{ note.id }}">
+    <strong>{{ note.title }}:</strong> {{ note.message }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+
+<!-- Gardening Tip -->
+{% if gardening_tip %}
+<div class="tip-container">
+    <div class="d-flex align-items-center">
+        <div class="mr-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+        </div>
+        <div>
+            <h5 class="mb-0">Gardening Tip for {{ current_weather }} weather:</h5>
+            <p class="mb-0">{{ gardening_tip.tip }}</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="container dashboard-container">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <div class="welcome-content">
+            <h1 class="display-4 mb-3">Welcome, {{ username }}!</h1>
+            <p class="lead mb-0">Your personal gardening assistant. Explore, track, and nurture your plants!</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-lg-8">
+            <!-- User Groups Section -->
+            <div class="dashboard-card card shadow">
+                <div class="card-header-custom bg-success text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        Your Gardening Groups
+                    </h3>
+                </div>
+                <div class="card-body-custom">
+                    {% if user_groups %}
+                    <div class="row">
+                        {% for group in user_groups %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card group-card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ group.name }}</h5>
+                                    <p class="card-text">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                            <circle cx="12" cy="10" r="3"></circle>
+                                        </svg>
+                                        {{ group.location }}
+                                    </p>
+                                    <a href="{% url 'view_discussions' group.group_id %}" class="btn btn-outline-success btn-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                        </svg>
+                                        View Discussion
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#6c757d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <p class="text-muted mt-3">You are not part of any gardening group yet.</p>
+                        <a href="{% url 'group_list' %}" class="btn btn-outline-success">Join a Group</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Weather Forecast Section -->
+            <div class="dashboard-card card shadow">
+                <div class="card-header-custom bg-warning text-dark d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                            <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+                        </svg>
+                        Weather Forecast - {{ user.location }}
+                    </h3>
+                </div>
+                <div class="card-body-custom">
+                    {% if weather_forecast %}
+                    <div class="row">
+                        {% for date, data in weather_forecast.items %}
+                        <div class="col-md-4 mb-3">
+                            <div class="weather-card card h-100">
+                                <div class="card-body">
+                                    <h5 class="weather-date">{{ date }}</h5>
+                                    <div class="text-center mb-3">
+                                        {% if 'rain' in data.weather.description %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#0d6efd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="16" y1="13" x2="16" y2="21"></line>
+                                            <line x1="8" y1="13" x2="8" y2="21"></line>
+                                            <line x1="12" y1="15" x2="12" y2="23"></line>
+                                            <path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"></path>
+                                        </svg>
+                                        {% elif 'cloud' in data.weather.description %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#6c757d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path>
+                                        </svg>
+                                        {% elif 'sun' in data.weather.description or 'clear' in data.weather.description %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ffc107" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="5"></circle>
+                                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                        </svg>
+                                        {% else %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#6c757d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M11 3a8 8 0 1 0 0 16 3 3 0 0 0 0-6 2 2 0 0 1 0-4 5 5 0 0 1 9 0 5 5 0 0 1-2 4"></path>
+                                        </svg>
+                                        {% endif %}
+                                    </div>
+                                    <div class="weather-info">
+                                        <div class="weather-info-item">
+                                            <span>Weather:</span>
+                                            <span>{{ data.weather.main }} - {{ data.weather.description }}</span>
+                                        </div>
+                                        <div class="weather-info-item">
+                                            <span>Temperature:</span>
+                                            <span>{{ data.temp }}°C</span>
+                                        </div>
+                                        <div class="weather-info-item">
+                                            <span>Feels Like:</span>
+                                            <span>{{ data.feels_like }}°C</span>
+                                        </div>
+                                        <div class="weather-info-item">
+                                            <span>Humidity:</span>
+                                            <span>{{ data.humidity }}%</span>
+                                        </div>
+                                        <div class="weather-info-item">
+                                            <span>Wind Speed:</span>
+                                            <span>{{ data.wind_speed }} m/s</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#6c757d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 3a8 8 0 1 0 0 16 3 3 0 0 0 0-6 2 2 0 0 1 0-4 5 5 0 0 1 9 0 5 5 0 0 1-2 4"></path>
+                        </svg>
+                        <p class="text-muted mt-3">Weather data not available for your location.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-lg-4">
+            <!-- Reminder Section -->
+            <div class="dashboard-card card shadow">
+                <div class="card-header-custom bg-info text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        Your Upcoming Reminders
+                    </h3>
+                    {% if reminders %}
+                    <span class="badge badge-light">{{ reminders|length }}</span>
+                    {% endif %}
+                </div>
+                <div class="card-body-custom">
+                    <div class="scrollable-list">
+                        {% for reminder in reminders %}
+                        <div class="reminder-item {% if reminder.is_completed %}reminder-completed{% else %}reminder-pending{% endif %}">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="mb-1">{{ reminder.task_type }}</h5>
+                                    <p class="mb-0">
+                                        <strong>Plant:</strong> {{ reminder.user_plant.plant.name }}
+                                    </p>
+                                    <small>Due: {{ reminder.due_date }}</small>
+                                </div>
+                                <div>
+                                    {% if reminder.is_completed %}
+                                    <span class="badge badge-success">Completed</span>
+                                    {% else %}
+                                    <span class="badge badge-warning">Pending</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="text-center py-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#6c757d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                            <p class="text-muted mt-3">No upcoming reminders.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendation Section -->
+            <div class="dashboard-card card shadow">
+                <div class="card-header-custom bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        Your Plant Recommendations
+                    </h3>
+                    {% if recommendations %}
+                    <span class="badge badge-light">{{ recommendations|length }}</span>
+                    {% endif %}
+                </div>
+                <div class="card-body-custom">
+                    <div class="scrollable-list">
+                        {% for recommendation in recommendations %}
+                        <div class="recommendation-item">
+                            <h5 class="mb-2">{{ recommendation.user_plant.plant.name }}</h5>
+                            <p class="mb-1"><small>Recommended by {{ recommendation.supervisor.username }}</small></p>
+                            <div class="mt-2">
+                                <p class="mb-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                                    </svg>
+                                    <strong>Watering:</strong> {{ recommendation.watering_schedule }}
+                                </p>
+                                <p class="mb-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                                        <path d="M2 12h20"></path>
+                                        <path d="M12 2v20"></path>
+                                    </svg>
+                                    <strong>Fertilization:</strong> {{ recommendation.fertilization_plan }}
+                                </p>
+                                <p class="mb-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                                        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                                    </svg>
+                                    <strong>Pest Control:</strong> {{ recommendation.pest_control_measures }}
+                                </p>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="text-center py-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#6c757d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                            <p class="text-muted mt-3">No recommendations available.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                <!-- Search & Filter Section -->
+                <div class="dashboard-card card shadow">
+                    <div class="card-header-custom bg-light">
+                        <h3 class="mb-0 text-dark">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            Search and Filter Plants
+                        </h3>
+                    </div>
+                    <div class="card-body-custom">
+                        <div class="search-container">
+                            <div class="d-flex justify-content-between mb-3">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="11" cy="11" r="8"></circle>
+                                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                            </svg>
+                                        </span>
+                                    </div>
+                                    <input type="text" id="searchInput" class="form-control" placeholder="Search plants..." onkeyup="filterPlants()">
+                                </div>
+                                <select id="filterCategory" class="form-control ml-2" style="width: 150px;" onchange="filterPlants()">
+                                    <option value="">All Categories</option>
+                                    <option value="Flower">Flower</option>
+                                    <option value="Vegetable">Vegetable</option>
+                                    <option value="Fruit">Fruit</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="plantList" class="row">
+                            {% for plant in plants %}
+                            <div class="col-md-4 col-sm-6 mb-4 plant-item" data-category="{{ plant.category }}">
+                                <div class="plant-card card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ plant.name }}</h5>
+                                        <p><strong>Category:</strong> {{ plant.category }}</p>
+                                        <p><strong>Characteristics:</strong> {{ plant.characteristics }}</p>
+                                        <p><strong>Care Requirements:</strong> {{ plant.care_requirements }}</p>
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="plant_id" value="{{ plant.plant_id }}">
+                                            <button type="submit" class="btn btn-primary btn-block add-plant-btn">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                                </svg>
+                                                Add to My Plants
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="col-12 text-center py-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#6c757d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 17H5a2 2 0 0 0-2 2 2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm12-2h-4a2 2 0 0 0-2 2 2 2 0 0 0 2 2h2a2 2 0 0 0 2-2z"></path>
+                                    <path d="M9 4H5a2 2 0 0 0-2 2 2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm12-2h-4a2 2 0 0 0-2 2 2 2 0 0 0 2 2h2a2 2 0 0 0 2-2z"></path>
+                                    <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2z"></path>
+                                </svg>
+                                <p class="text-muted mt-3">No plants found.</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+</div>
+
+<script>
+function filterPlants() {
+    let input = document.getElementById('searchInput').value.toLowerCase();
+    let category = document.getElementById('filterCategory').value;
+    let plants = document.querySelectorAll('.plant-item');
+
+    plants.forEach(plant => {
+        let name = plant.querySelector('.card-title').textContent.toLowerCase();
+        let plantCategory = plant.dataset.category.toLowerCase();
+
+        if (name.includes(input) && (category === "" || plantCategory.includes(category.toLowerCase()))) {
+            plant.style.display = "block";
+        } else {
+            plant.style.display = "none";
+        }
+    });
+}
+</script>
+{% endblock %}

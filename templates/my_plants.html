@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}My Plants{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="card mx-auto" style="max-width: 800px;">
+        <div class="card-body">
+            <h2 class="text-center">My Plants</h2>
+            
+            {% for user_plant in user_plants %}
+            <div class="plant-card mb-3 p-3 border rounded shadow-sm">
+                <div>
+                    <h3>{{ user_plant.plant.name }}</h3>
+                    <p>Category: {{ user_plant.plant.category }}</p>
+                </div>
+                <div class="actions">
+                    <a href="{% url 'view_observations' user_plant.user_plant_id %}" class="btn btn-info btn-sm">View Observations</a>
+                    <a href="{% url 'view_reminders' user_plant.user_plant_id %}" class="btn btn-warning btn-sm">View Reminders</a>
+                </div>
+            </div>
+            {% empty %}
+            <p>No plants added yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

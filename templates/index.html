@@ -1,0 +1,558 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to Gardening Care - Your Personal Plant Assistant{% endblock %}
+
+{% block css %}
+{{ block.super }}
+<style>
+    /* Landing Page Specific Styles */
+    .jumbotron {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 8rem 2rem;
+        margin-bottom: 0;
+        border-radius: 0;
+        position: relative;
+    }
+    
+    .jumbotron-content {
+        max-width: 600px;
+        margin: 0 auto;
+        text-align: center;
+    }
+    
+    .jumbotron h1 {
+        font-size: 3.5rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    .jumbotron p {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+    
+    .btn-hero {
+        padding: 0.75rem 2rem;
+        font-size: 1.1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        background-color: #006666;
+        border: none;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-hero:hover {
+        background-color: #004d4d;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .section {
+        padding: 5rem 0;
+    }
+    
+    .section-title {
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+    }
+    
+    .section-title:after {
+        content: '';
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background-color: #006666;
+    }
+    
+    .feature-card {
+        text-align: center;
+        padding: 2rem;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        height: 100%;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+        color: #006666;
+    }
+    
+    .how-it-works {
+        background-color: #f8f9fa;
+    }
+    
+    .step-card {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    
+    .step-number {
+        width: 60px;
+        height: 60px;
+        background-color: #006666;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-right: 1.5rem;
+        flex-shrink: 0;
+    }
+    
+    .testimonial-card {
+        background-color: white;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        position: relative;
+    }
+    
+    .testimonial-card:before {
+        content: '"';
+        position: absolute;
+        top: 10px;
+        left: 20px;
+        font-size: 5rem;
+        color: rgba(0, 102, 102, 0.1);
+        font-family: Georgia, serif;
+        line-height: 1;
+    }
+    
+    .testimonial-text {
+        font-style: italic;
+        margin-bottom: 1.5rem;
+        padding-left: 1rem;
+    }
+    
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+    }
+    
+    .testimonial-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 1rem;
+        object-fit: cover;
+    }
+    
+    .plant-card {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+    
+    .plant-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .plant-img {
+        height: 200px;
+        object-fit: cover;
+    }
+    
+    .plant-difficulty {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    
+    .difficulty-easy {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .difficulty-medium {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    
+    .difficulty-hard {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    
+    .newsletter-section {
+        background: linear-gradient(135deg, #006666, #004d4d);
+        color: white;
+        padding: 4rem 0;
+    }
+    
+    .newsletter-form {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .cta-section {
+        background: url('/placeholder.svg?height=400&width=1600') center/cover no-repeat;
+        position: relative;
+        padding: 6rem 0;
+    }
+    
+    .cta-section:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 77, 77, 0.8);
+    }
+    
+    .cta-content {
+        position: relative;
+        z-index: 1;
+        color: white;
+        text-align: center;
+    }
+    
+    .counter-item {
+        text-align: center;
+        padding: 2rem;
+    }
+    
+    .counter-number {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #006666;
+        margin-bottom: 0.5rem;
+    }
+    
+    .counter-label {
+        font-size: 1.1rem;
+        color: #555;
+    }
+    
+    @media (max-width: 768px) {
+        .jumbotron {
+            padding: 6rem 1rem;
+        }
+        
+        .jumbotron h1 {
+            font-size: 2.5rem;
+        }
+        
+        .section {
+            padding: 3rem 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero/Jumbotron Section -->
+<div class="jumbotron">
+    <div class="jumbotron-content">
+        <h1>Grow Your Garden with Confidence</h1>
+        <p>Your personal gardening assistant that helps you track, nurture, and grow beautiful plants with expert guidance and community support.</p>
+        <div class="d-flex justify-content-center">
+            <a href="{% url 'register' %}" class="btn btn-primary btn-hero mr-3">Get Started</a>
+            <a href="#features" class="btn btn-outline-light btn-hero">Learn More</a>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Counter Section -->
+<div class="section bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-6">
+                <div class="counter-item">
+                    <div class="counter-number">5,000+</div>
+                    <div class="counter-label">Happy Gardeners</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="counter-item">
+                    <div class="counter-number">1,200+</div>
+                    <div class="counter-label">Plant Species</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="counter-item">
+                    <div class="counter-number">350+</div>
+                    <div class="counter-label">Gardening Groups</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="counter-item">
+                    <div class="counter-number">98%</div>
+                    <div class="counter-label">Success Rate</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div id="features" class="section">
+    <div class="container">
+        <h2 class="section-title">Why Choose Gardening Care?</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                        </svg>
+                    </div>
+                    <h3>Personalized Plant Care</h3>
+                    <p>Get customized care instructions and reminders tailored to your specific plants and local climate conditions.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <h3>Community Support</h3>
+                    <p>Connect with fellow gardening enthusiasts, share experiences, and get advice from our thriving community.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
+                        </svg>
+                    </div>
+                    <h3>Weather Integration</h3>
+                    <p>Real-time weather data and forecasts to help you make informed decisions about your garden care.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                    </div>
+                    <h3>Smart Reminders</h3>
+                    <p>Never forget to water, fertilize, or prune your plants with our intelligent reminder system.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <h3>Expert Recommendations</h3>
+                    <p>Get professional advice and recommendations from our team of gardening experts and supervisors.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </div>
+                    <h3>Extensive Plant Database</h3>
+                    <p>Access our comprehensive database of plants with detailed care instructions and growing tips.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works Section -->
+<div class="section how-it-works">
+    <div class="container">
+        <h2 class="section-title">How It Works</h2>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Create Your Account</h4>
+                        <p>Sign up for free and set up your gardening profile with your location and preferences.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Add Your Plants</h4>
+                        <p>Browse our extensive plant database and add the plants you're growing to your collection.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Get Personalized Care Plans</h4>
+                        <p>Receive customized care instructions based on your plants, location, and local weather conditions.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Join Gardening Groups</h4>
+                        <p>Connect with other gardeners in your area to share tips, experiences, and even plants!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Testimonials Section -->
+<div class="section">
+    <div class="container">
+        <h2 class="section-title">What Our Gardeners Say</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">Gardening Care has completely transformed my gardening experience. The reminders and personalized tips have helped my plants thrive like never before!</p>
+                    <div class="testimonial-author">
+                        <img src="/placeholder.svg?height=100&width=100" alt="Sarah Johnson" class="testimonial-avatar">
+                        <div>
+                            <h5 class="mb-0">Sarah Johnson</h5>
+                            <small class="text-muted">Urban Gardener, New York</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">As a beginner, I was always killing my plants. With Gardening Care's guidance, I now have a thriving indoor garden that I'm proud of!</p>
+                    <div class="testimonial-author">
+                        <img src="/placeholder.svg?height=100&width=100" alt="Michael Chen" class="testimonial-avatar">
+                        <div>
+                            <h5 class="mb-0">Michael Chen</h5>
+                            <small class="text-muted">Apartment Gardener, Chicago</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">The community aspect is what I love most. I've connected with local gardeners, exchanged plants, and made great friends through the platform!</p>
+                    <div class="testimonial-author">
+                        <img src="/placeholder.svg?height=100&width=100" alt="Emma Rodriguez" class="testimonial-avatar">
+                        <div>
+                            <h5 class="mb-0">Emma Rodriguez</h5>
+                            <small class="text-muted">Community Garden Leader, Austin</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Plants Section -->
+<div class="section bg-light">
+    <div class="container">
+        <h2 class="section-title">Featured Plants</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="plant-card">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Snake Plant" class="plant-img w-100">
+                    <div class="card-body">
+                        <span class="plant-difficulty difficulty-easy">Easy</span>
+                        <h4>Snake Plant</h4>
+                        <p>A hardy indoor plant that thrives on neglect. Perfect for beginners and busy gardeners.</p>
+                        <a href="#" class="btn btn-sm btn-outline-success">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="plant-card">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Tomato Plant" class="plant-img w-100">
+                    <div class="card-body">
+                        <span class="plant-difficulty difficulty-medium">Medium</span>
+                        <h4>Tomato Plant</h4>
+                        <p>A rewarding vegetable to grow with the right care and attention to watering and sunlight.</p>
+                        <a href="#" class="btn btn-sm btn-outline-success">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="plant-card">
+                    <img src="/placeholder.svg?height=300&width=400" alt="Orchid" class="plant-img w-100">
+                    <div class="card-body">
+                        <span class="plant-difficulty difficulty-hard">Advanced</span>
+                        <h4>Orchid</h4>
+                        <p>A beautiful flowering plant that requires specific care but rewards with stunning blooms.</p>
+                        <a href="#" class="btn btn-sm btn-outline-success">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Newsletter Section -->
+<div class="newsletter-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h2 class="mb-4">Get Gardening Tips in Your Inbox</h2>
+                <p class="mb-4">Subscribe to our newsletter for seasonal gardening tips, plant care guides, and exclusive offers.</p>
+                <form class="newsletter-form">
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control" placeholder="Your email address" aria-label="Your email address">
+                        <div class="input-group-append">
+                            <button class="btn btn-light" type="button">Subscribe</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action Section -->
+<div class="cta-section">
+    <div class="container">
+        <div class="cta-content">
+            <h2 class="mb-4">Ready to Start Your Gardening Journey?</h2>
+            <p class="mb-4">Join thousands of happy gardeners and watch your plants thrive with personalized care.</p>
+            <a href="{% url 'register' %}" class="btn btn-primary btn-hero">Sign Up Now - It's Free!</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

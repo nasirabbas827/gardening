@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Your Gardening Groups</h2>
+    <a href="{% url 'create_group' %}" class="btn btn-success mb-3">+ Create New Group</a>
+    <ul class="list-group">
+        {% for group in groups %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ group.name }}</strong> - {{ group.location }}
+                    
+                </div>
+                <div>
+                    {% if group in user_groups %}
+                        <a href="{% url 'leave_group' group.group_id %}" class="btn btn-sm btn-danger">Leave</a>
+                        <a href="{% url 'view_discussions' group.group_id %}" class="btn btn-sm btn-info">View Discussions</a>
+                    {% else %}
+                        <a href="{% url 'join_group' group.group_id %}" class="btn btn-sm btn-success">Join</a>
+                    {% endif %}
+                    {% if group.created_by == user %}
+                        <a href="{% url 'edit_group' group.group_id %}" class="btn btn-sm btn-primary">Edit</a>
+                        <a href="{% url 'delete_group' group.group_id %}" class="btn btn-sm btn-danger">Delete</a>
+                    {% endif %}
+                </div>
+            </li>
+        {% empty %}
+            <li class="list-group-item">No groups found.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

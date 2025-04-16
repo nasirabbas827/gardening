@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}All Resources{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>All Educational Resources</h2>
+    <div class="row">
+        {% for resource in resources %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ resource.title }}</h5>
+                        <p class="card-text">{{ resource.description|truncatewords:20 }}</p>
+                        {% if resource.video_link %}
+                            <a href="{% url 'view_resource' resource.id %}" class="btn btn-primary">View Resource</a>
+                        {% else %}
+                            <p>No video available for this resource.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>No resources available.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

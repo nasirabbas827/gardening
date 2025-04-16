@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Observations - {{ user_plant.plant.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="card mx-auto" style="max-width: 800px;">
+        <div class="card-body">
+            <h2 class="text-center mb-4">Observations for {{ user_plant.plant.name }}</h2>
+
+            <!-- Add Observation Form -->
+            <form method="POST" class="mb-4">
+                {% csrf_token %}
+                <input type="hidden" name="add_observation">
+                
+                <div class="form-group">
+                    <label for="growth_stage">Growth Stage:</label>
+                    <input type="text" class="form-control" name="growth_stage" required id="growth_stage">
+                </div>
+
+                <div class="form-group">
+                    <label for="health_indicator">Health Indicator:</label>
+                    <select name="health_indicator" class="form-control" required id="health_indicator">
+                        <option value="Healthy">Healthy</option>
+                        <option value="Needs Attention">Needs Attention</option>
+                        <option value="Wilting">Wilting</option>
+                        <option value="Diseased">Diseased</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Notes:</label>
+                    <textarea name="notes" class="form-control" id="notes"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Add Observation</button>
+            </form>
+
+            <!-- Display Observations in Table -->
+            {% if observations %}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Growth Stage</th>
+                        <th>Health</th>
+                        <th>Notes</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for observation in observations %}
+                    <tr>
+                        <td>{{ observation.observation_date }}</td>
+                        <td>{{ observation.growth_stage }}</td>
+                        <td>{{ observation.health_indicator }}</td>
+                        <td>{{ observation.notes }}</td>
+                        <td>
+                            <!-- Delete Observation Button -->
+                            <form method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="delete_observation">
+                                <input type="hidden" name="observation_id" value="{{ observation.observation_id }}">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No observations recorded yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
