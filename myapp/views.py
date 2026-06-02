@@ -88,7 +88,7 @@ from .models import Notification
 import requests
 
 def get_weather_data(location):
-    api_key = '219ff162a58589430fc465f29dd1d386'  # Replace with your own
+    api_key = "YOUR_OWN_API_KEY"  # Replace with your own
     url = f"https://api.openweathermap.org/data/2.5/forecast?q={location}&appid={api_key}&units=metric"
 
     try:
